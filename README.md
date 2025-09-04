@@ -43,11 +43,14 @@ active fire disasters?
 - Built with Guardrail and evaluation
 - Previous messages are preserved in context
 
-## Suggested Project Structure
+## Project Structure
+- Keeps Gradio app logic clean and isolated
+- Separates data/model logic from UI
+- Makes it easier to maintain, extend, or even deploy later (e.g., with FastAPI or Streamlit)
+
 ```bash
 disaster-gpt/
 ├── app/
-│   ├── __init__.py
 │   ├── main.py               # 🔹 Main Gradio app (entry point)
 │   ├── rag_pipeline.py       # 🔹 RAG logic (retrieval + answer generation) 
 │   ├── models.py             # 🔹 Pydantic models (e.g., DisasterDeclaration)
@@ -64,7 +67,7 @@ disaster-gpt/
 │   └── disaster_metadata.pkl
 │
 ├── assets/                   # 🔹 (Optional) Images, logos, docs
-│   └── logo.png
+│   └── README.md
 │
 ├── tests/
 │   └── test_rag_pipeline.py  # 🔹 Unit tests (pytest)
@@ -73,8 +76,6 @@ disaster-gpt/
 ├── .gitignore
 ├── README.md
 ├── requirements.txt
-└── run.sh                    # 🔹 Simple launcher (optional)
-
 
 app/main.py	Launches the Gradio UI (e.g., gr.ChatInterface)
 app/rag_pipeline.py	Contains rag_pipeline() and chat_rag_fn() logic
@@ -84,17 +85,14 @@ app/answer_eval.py	GPT-based evaluation and keyword-based guardrails
 data/	Static data source (e.g., CSVs)
 saved_index/	Stores generated FAISS index and metadata
 tests/	Optional test suite using pytest or unittest
-
-This structure:
-Keeps Gradio app logic clean and isolated
-Separates data/model logic from UI
-Makes it easier to maintain, extend, or even deploy later (e.g., with FastAPI or Streamlit)
 ```
 
 ## tests
-isaster retrieval	search_similar_declarations()
+```bash
+Disaster retrieval	search_similar_declarations()
 Active disaster filtering	is_active_disaster()
 Answer generation	generate_openai_answer()
 Guardrails	validate_answer()
 Full RAG pipeline test	chat_rag_fn()
 OpenAI mocking	@patch(...)
+```
