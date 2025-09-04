@@ -1,8 +1,12 @@
 
 from typing import List
-import openai
-
+from app.ai_client import OpenAIClient
 from app.constants import EVAL_MODEL, MIN_ANSWER_LENGTH
+
+_ai_client = None
+def set_ai_client(ai_client: OpenAIClient):
+    global _ai_client
+    _ai_client = ai_client
 
 def evaluate_with_gpt_judge(query: str, context: str, answer: str) -> str:
     eval_prompt = f"""
@@ -24,7 +28,7 @@ def evaluate_with_gpt_judge(query: str, context: str, answer: str) -> str:
     Return your scores and one comment as JSON like:
     {{"relevance": 4, "accuracy": 4, "completeness": 5, "comments": "Accurate and complete."}}
     """
-    judge_response = openai.chat.completions.create(
+    judge_response = _ai_client.client.chat.completions.create(
         model=EVAL_MODEL,
         messages=[
             {"role": "user", "content": eval_prompt}

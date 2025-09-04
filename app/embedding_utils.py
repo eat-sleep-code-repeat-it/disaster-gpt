@@ -1,22 +1,45 @@
 from typing import List, Optional, Tuple
-import openai
 import numpy as np
 import faiss
 import pickle
-
+from app.ai_client import OpenAIClient
 from app.constants import EMBEDDING_MODEL
 from app.models import DisasterDeclaration
 
 
-def get_embedding(text: str) -> List[float]:
+def get_embeddings(declarations: List[DisasterDeclaration], ai_client: OpenAIClient) -> List[float]:
     """
     Embeds the structured disaster description using OpenAI Embeddings API.
     """
-    response = openai.embeddings.create(
-        model=EMBEDDING_MODEL,
-        input=text
-    )
-    return response.data[0].embedding
+    embeddings = []
+    for decl in declarations:
+        print(f"create_text_for_embedding {decl.disasterNumber}...")
+        text = create_text_for_embedding(decl)
+        response = ai_client.client.embeddings.create(
+            model=EMBEDDING_MODEL,
+            input=text
+        )
+        emb = response.data[0].embedding
+        embeddings.append(emb)    
+    return embeddings
+
+def get_embeddings_batch(declarations: List[DisasterDeclaration], ai_client: OpenAIClient) -> List[List[float]]:
+    """
+    Embeds the structured disaster description using OpenAI Embeddings API.
+    """
+    texts = [create_text_for_embedding(decl) for decl in declarations]
+    all_embeddings = []
+    batch_size = 10
+    for i in range(0, len(texts), batch_size):
+        batch = texts[i:i + batch_size]
+        response = ai_client.client.embeddings.create(
+            model=EMBEDDING_MODEL,
+            input=batch
+        )
+        batch_embeddings = [item.embedding for item in response.data]
+        all_embeddings.extend(batch_embeddings)
+    return all_embeddings
+
 def create_text_for_embedding(declaration: DisasterDeclaration, score: Optional[float] = None) -> str:
     parts = [
         f"DisasterNumber: {declaration.disasterNumber}",
@@ -34,17 +57,15 @@ def create_text_for_embedding(declaration: DisasterDeclaration, score: Optional[
     return ". ".join(parts)
 
 
-def build_faiss_index(declarations: List[DisasterDeclaration]) -> Tuple[faiss.IndexFlatL2, List[DisasterDeclaration]]:    
+def build_faiss_index(declarations: List[DisasterDeclaration], ai_client: OpenAIClient) -> Tuple[faiss.IndexFlatL2, List[DisasterDeclaration]]:    
     """
     Creates and populates a FAISS vector index from disaster embeddings.
     """
     print("Creating embeddings and building FAISS index...")
-    embeddings = []
-    for decl in declarations:
-        print(f"create_text_for_embedding {decl.disasterNumber}...")
-        text = create_text_for_embedding(decl)
-        emb = get_embedding(text)
-        embeddings.append(emb)
+
+    #embeddings = get_embeddings(declarations, ai_client)
+    embeddings = get_embeddings_batch(declarations, ai_client)
+
     dimension = len(embeddings[0])
     index = faiss.IndexFlatL2(dimension)
     embeddings_np = np.array(embeddings).astype('float32')

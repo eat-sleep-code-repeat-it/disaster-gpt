@@ -1,9 +1,9 @@
 from typing import List, Optional, Tuple
 from datetime import date
-import openai
 import numpy as np
 import faiss
 from datetime import datetime
+from app.ai_client import OpenAIClient
 from app.answer_eval import evaluate_with_gpt_judge, validate_answer
 from app.constants import CHAT_MODEL, TOP_K
 from app.embedding_utils import create_text_for_embedding, get_embedding
@@ -12,10 +12,11 @@ from app.models import DisasterDeclaration
 """
 main "chat" function that ties retrieval + generation + validation + evaluation together
 """ 
-def setup_rag_pipeline(index, declarations):
-    global _index, _indexed_declarations
+def setup_rag_pipeline(index, declarations, ai_client: OpenAIClient):
+    global _index, _indexed_declarations, _ai_client
     _index = index
     _indexed_declarations = declarations
+    _ai_client = ai_client
 def chat_rag_fn(user_message: str, chat_history: list) -> Tuple[str, list]:
     only_active = "active" in user_message.lower()
     results = search_similar_declarations(user_message, _index, _indexed_declarations, top_k=TOP_K, only_active=only_active)
@@ -53,7 +54,7 @@ def generate_openai_answer(query: str, results: List[Tuple[DisasterDeclaration, 
         f"Answer:"
     )
 
-    response = openai.chat.completions.create(
+    response =  _ai_client.client.chat.completions.create(
         model=CHAT_MODEL,
         messages=[
             {"role": "system", "content": (
@@ -74,7 +75,7 @@ def search_similar_declarations(
     top_k=TOP_K,
     only_active: bool = False
 ) -> List[Tuple[DisasterDeclaration, float]]:
-    query_emb = np.array([get_embedding(query)]).astype('float32')
+    query_emb = np.array([get_embedding(query, ai_client=_ai_client)]).astype('float32')
     distances, indices = index.search(query_emb, top_k)
     results = []
     today = datetime.today().date()
