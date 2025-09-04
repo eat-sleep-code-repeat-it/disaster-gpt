@@ -17,6 +17,9 @@ pip freeze > requirements.txt
 
 # set OPENAI_API_KEY in .env file
 python -m app.main
+
+pip install pytest
+pytest tests/
 ```
 
 ## Sample questions
@@ -25,9 +28,9 @@ is there an active disaster in Washington County, Oregon?
 is there an disaster in Riverside, California?
 is there an active disaster in Riverside, California? 
 active fire disasters?
-``
+```
 
-## ✅ What we Get:
+## What we Get:
 - A clean chat UI (like ChatGPT)
 - Each message sends a user query
 - RAG pipeline is run
@@ -78,10 +81,24 @@ app/answer_eval.py	GPT-based evaluation and keyword-based guardrails
 data/	Static data source (e.g., CSVs)
 saved_index/	Stores generated FAISS index and metadata
 tests/	Optional test suite using pytest or unittest
-This structure:
 
+This structure:
 Keeps Gradio app logic clean and isolated
 Separates data/model logic from UI
 Makes it easier to maintain, extend, or even deploy later (e.g., with FastAPI or Streamlit)
 ```
 
+## tests
+isaster retrieval	search_similar_declarations()
+Active disaster filtering	is_active_disaster()
+Answer generation	generate_openai_answer()
+Guardrails	validate_answer()
+Full RAG pipeline test	chat_rag_fn()
+OpenAI mocking	@patch(...)
+
+
+```bash
+pytest tests/test_answer_eval.py
+pytest tests/test_embedding_utils.py
+
+```
