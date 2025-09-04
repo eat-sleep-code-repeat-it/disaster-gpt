@@ -1,7 +1,9 @@
 
-#  DisasterGPT – Ask Anything About U.S. Disaster Declarations
+#  DisasterGPT 
 
- 
+Ask Anything About U.S. Disaster Declarations.
+
+## How to run 
 ```bash
 # Python 3.13.7
 
