@@ -7,21 +7,15 @@ from app.constants import EMBEDDING_MODEL
 from app.models import DisasterDeclaration
 
 
-def get_embeddings(declarations: List[DisasterDeclaration], ai_client: OpenAIClient) -> List[float]:
+def get_embedding(text:str, ai_client: OpenAIClient) -> List[float]:
     """
     Embeds the structured disaster description using OpenAI Embeddings API.
     """
-    embeddings = []
-    for decl in declarations:
-        print(f"create_text_for_embedding {decl.disasterNumber}...")
-        text = create_text_for_embedding(decl)
-        response = ai_client.client.embeddings.create(
-            model=EMBEDDING_MODEL,
-            input=text
-        )
-        emb = response.data[0].embedding
-        embeddings.append(emb)    
-    return embeddings
+    response = ai_client.client.embeddings.create(
+        model=EMBEDDING_MODEL,
+        input=text
+    )   
+    return response.data[0].embedding
 
 def get_embeddings_batch(declarations: List[DisasterDeclaration], ai_client: OpenAIClient) -> List[List[float]]:
     """
@@ -63,7 +57,6 @@ def build_faiss_index(declarations: List[DisasterDeclaration], ai_client: OpenAI
     """
     print("Creating embeddings and building FAISS index...")
 
-    #embeddings = get_embeddings(declarations, ai_client)
     embeddings = get_embeddings_batch(declarations, ai_client)
 
     dimension = len(embeddings[0])

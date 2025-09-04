@@ -14,10 +14,11 @@ pip install gradio
 pip install openai
 pip install faiss-cpu
 pip install python-dotenv
-
 pip freeze > requirements.txt
 
+
 # set OPENAI_API_KEY in .env file
+pip install -r requirements.txt
 python -m app.main
 
 pip install pytest
