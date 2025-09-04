@@ -16,7 +16,6 @@ pip install python-dotenv
 pip freeze > requirements.txt
 
 # set OPENAI_API_KEY in .env file
-python disaster_gpt.py
 python -m app.main
 ```
 
