@@ -102,7 +102,26 @@ OpenAI mocking	@patch(...)
 
 ## Future
 
-To integrate MCP into the current Gradio RAG app
+Adapt retrieval + context + prompt formatting pipeline to conform to the MCP standard (or parts of it), you can plug into an MCP-compatible server or client.
+
+### Scenario 1: You want to expose RAG pipeline as an MCP-compatible server
+```js
+Wrap retrieval and response code into an MCP-compatible handler (e.g., using LangChain's MCP tools)
+Expose a REST or HTTP API using FastAPI or Flask
+Follow the MCP schema for request/response (context, query, history, etc.)
+🧱 Example: Using LangChain’s langchain-mcp
+```
+
+### Scenario 2: You want to consume an existing MCP server
+```js
+Let’s say you want to delegate RAG to an MCP server, not implement one.
+Format queries using the MCP request schema (user_input, retrieval_context, history, etc.)
+Send that to the MCP server endpoint (e.g., via requests.post())
+Receive the MCP-formatted answer
+Display in Gradio app
+```
+
+### To integrate MCP into the current Gradio RAG app
 1. Define MCP request/response format
 2. Modify chat_rag_fn() to use MCP
 3. (Optional) Expose an MCP server
@@ -112,19 +131,4 @@ Make my own MCP server	    Wrap my RAG logic in a FastAPI MCP route
 Match MCP schema	        Use user_input, context, history fields
 ```
 
-### Scenario 1: You want to expose your RAG pipeline as an MCP-compatible server
-```js
-Wrap your retrieval and response code into an MCP-compatible handler (e.g., using LangChain's MCP tools)
-Expose a REST or HTTP API using FastAPI or Flask
-Follow the MCP schema for request/response (context, query, history, etc.)
-🧱 Example: Using LangChain’s langchain-mcp
-```
 
-### Scenario 2: You want to consume an existing MCP server
-```js
-Let’s say you want to delegate RAG to an MCP server, not implement one.
-Format your queries using the MCP request schema (user_input, retrieval_context, history, etc.)
-Send that to the MCP server endpoint (e.g., via requests.post())
-Receive the MCP-formatted answer
-Display in your Gradio app
-```
