@@ -27,12 +27,13 @@ pytest tests/test_embedding_utils.py
 pytest tests/test_rag_pipeline.py
 ```
 
-## Sample questions
+## Sample Prompts
 ```js
-is there an active disaster in Washington County, Oregon?
-is there an disaster in Riverside, California?
-is there an active disaster in Riverside, California? 
-active fire disasters?
+is there an active disaster in Washington County, Oregon? YES & Evaluation
+is there an disaster in Riverside, California?  YES & Evaluation
+is there an active disaster in Riverside, California? NO & Evaluation
+active fire disasters? YES,  Evaluation
+give all fire disasters? NO,  Evaluation & Guardrail
 ```
 
 ## What we Get:
