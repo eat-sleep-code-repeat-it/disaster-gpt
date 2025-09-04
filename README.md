@@ -20,6 +20,8 @@ pip freeze > requirements.txt
 # set OPENAI_API_KEY in .env file
 pip install -r requirements.txt
 python -m app.main
+python -m app.main --no-verify-ssl
+
 
 pip install pytest
 pytest tests/

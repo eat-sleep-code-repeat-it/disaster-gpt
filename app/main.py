@@ -1,3 +1,4 @@
+import argparse
 from app.ai_client import OpenAIClient
 from app.constants import DISASTER_CSV_PATH, FAISS_INDEX_PATH, FAISS_METADATA_PATH
 from app.rag_pipeline import chat_rag_fn, setup_rag_pipeline
@@ -7,16 +8,15 @@ import gradio as gr
 import os
 import logging
 from dotenv import load_dotenv, find_dotenv
-
 load_dotenv(find_dotenv())
 api_key = os.getenv("OPENAI_API_KEY")
-verify_ssl = False
-ai_client = OpenAIClient(api_key, verify_ssl)
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
-def main():
+def main(verify_ssl=True):
+    logging.info(f"verify_ssl to {verify_ssl}")
+
     # Load/build declaration index    
     disaster_declarations = read_disaster_declarations_from_csv(DISASTER_CSV_PATH)
     if os.path.exists(FAISS_INDEX_PATH) and os.path.exists(FAISS_METADATA_PATH):
@@ -30,6 +30,7 @@ def main():
     # Set AI client for anwser evaluation
     logging.info("Set AI client for anwser evaluation ...")
     from app.answer_eval import set_ai_client
+    ai_client = OpenAIClient(api_key, verify_ssl)
     set_ai_client(ai_client)
 
     # Initialize rag_pipeline with data
@@ -45,4 +46,15 @@ def main():
     ).launch()
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--no-verify-ssl",
+        dest="verify_ssl",
+        action="store_false",
+        help="Disable SSL verification (default: enabled)"
+    )
+    parser.set_defaults(verify_ssl=True)
+
+    args = parser.parse_args()
+    main(verify_ssl=args.verify_ssl)
+    #main()
