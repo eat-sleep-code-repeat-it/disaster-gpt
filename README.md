@@ -111,3 +111,20 @@ Use MCP server for answers	Send query, history, and context to MCP API
 Make my own MCP server	    Wrap my RAG logic in a FastAPI MCP route
 Match MCP schema	        Use user_input, context, history fields
 ```
+
+### Scenario 1: You want to expose your RAG pipeline as an MCP-compatible server
+```js
+Wrap your retrieval and response code into an MCP-compatible handler (e.g., using LangChain's MCP tools)
+Expose a REST or HTTP API using FastAPI or Flask
+Follow the MCP schema for request/response (context, query, history, etc.)
+🧱 Example: Using LangChain’s langchain-mcp
+```
+
+### Scenario 2: You want to consume an existing MCP server
+```js
+Let’s say you want to delegate RAG to an MCP server, not implement one.
+Format your queries using the MCP request schema (user_input, retrieval_context, history, etc.)
+Send that to the MCP server endpoint (e.g., via requests.post())
+Receive the MCP-formatted answer
+Display in your Gradio app
+```
