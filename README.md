@@ -3,6 +3,8 @@
 
  
 ```bash
+# Python 3.13.7
+
 python -m venv venv
 venv\Scripts\activate 
 
