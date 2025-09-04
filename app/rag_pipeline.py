@@ -34,6 +34,7 @@ def chat_rag_fn(user_message: str, chat_history: list) -> Tuple[str, list]:
     )
 
     response = (
+        f"🙋 **Question:** {user_message}\n\n"
         f"**Top Matches:**\n{match_summary}\n\n"
         f"🧠 **Answer:** {answer}\n\n"
         f"📊 **Evaluation:**\n{evaluation}"
