@@ -99,3 +99,15 @@ Guardrails	validate_answer()
 Full RAG pipeline test	chat_rag_fn()
 OpenAI mocking	@patch(...)
 ```
+
+## Future
+
+To integrate MCP into the current Gradio RAG app
+1. Define MCP request/response format
+2. Modify chat_rag_fn() to use MCP
+3. (Optional) Expose an MCP server
+```bash
+Use MCP server for answers	Send query, history, and context to MCP API
+Make my own MCP server	    Wrap my RAG logic in a FastAPI MCP route
+Match MCP schema	        Use user_input, context, history fields
+```
