@@ -17,6 +17,7 @@ pip freeze > requirements.txt
 
 # set OPENAI_API_KEY in .env file
 python disaster_gpt.py
+python -m app.main
 ```
 
 ## Sample questions
@@ -43,7 +44,7 @@ disaster-gpt/
 ├── app/
 │   ├── __init__.py
 │   ├── main.py               # 🔹 Main Gradio app (entry point)
-│   ├── rag_pipeline.py       # 🔹 RAG logic (retrieval + answer generation)
+│   ├── rag_pipeline.py       # 🔹 RAG logic (retrieval + answer generation) 
 │   ├── models.py             # 🔹 Pydantic models (e.g., DisasterDeclaration)
 │   ├── embedding_utils.py    # 🔹 Embedding + FAISS index handling
 │   ├── answer_eval.py        # 🔹 Guardrails & GPT-based evaluation
