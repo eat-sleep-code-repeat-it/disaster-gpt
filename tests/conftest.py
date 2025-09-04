@@ -1,6 +1,9 @@
 # tests/conftest.py
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from app import rag_pipeline, embedding_utils, constants
 import pytest
-from app import rag_pipeline, embedding_utils, data_loader, constants
 
 @pytest.fixture(scope="session")
 def rag_pipeline_fixture():

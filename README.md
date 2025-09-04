@@ -20,6 +20,9 @@ python -m app.main
 
 pip install pytest
 pytest tests/
+pytest tests/test_answer_eval.py
+pytest tests/test_embedding_utils.py
+pytest tests/test_rag_pipeline.py
 ```
 
 ## Sample questions
@@ -95,10 +98,3 @@ Answer generation	generate_openai_answer()
 Guardrails	validate_answer()
 Full RAG pipeline test	chat_rag_fn()
 OpenAI mocking	@patch(...)
-
-
-```bash
-pytest tests/test_answer_eval.py
-pytest tests/test_embedding_utils.py
-
-```
