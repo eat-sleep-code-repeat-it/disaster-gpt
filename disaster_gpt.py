@@ -249,14 +249,16 @@ def main():
     global index, indexed_declarations
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    csv_file = os.path.join(script_dir, "disaster_declarations.csv")
+    csv_file = os.path.join(script_dir, "data", "disaster_declarations.csv")
     disaster_declarations = read_disaster_declarations_from_csv(csv_file)
 
-    if os.path.exists("disaster_faiss.index") and os.path.exists("disaster_metadata.pkl"):
-        index, indexed_declarations = load_index_and_metadata("disaster_faiss.index", "disaster_metadata.pkl")
+    index_file = os.path.join(script_dir, "saved_index","disaster_faiss.index")
+    index_metadata_file = os.path.join(script_dir, "saved_index", "disaster_metadata.pkl")
+    if os.path.exists(index_file) and os.path.exists(index_metadata_file):
+        index, indexed_declarations = load_index_and_metadata(index_file, index_metadata_file)
     else:
         index, indexed_declarations = build_faiss_index(disaster_declarations)
-        save_index_and_metadata(index, indexed_declarations, "disaster_faiss.index", "disaster_metadata.pkl")
+        save_index_and_metadata(index, indexed_declarations, index_file, index_metadata_file)
     
     # 🚀 Chat Interface with history
     gr.ChatInterface(
