@@ -137,8 +137,10 @@ def create_text_for_embedding(declaration: DisasterDeclaration, score: Optional[
         f"County: {declaration.designatedArea or 'N/A'}",
         f"DeclarationType: {declaration.declarationType or 'N/A'}",
         f"DeclarationDate: {declaration.declarationDate or 'N/A'}",
-        f"Title: {declaration.declarationTitle or 'N/A'}",
-        f"IncidentType: {declaration.incidentType or 'N/A'}"
+        f"declarationTitle: {declaration.declarationTitle or 'N/A'}",
+        f"IncidentType: {declaration.incidentType or 'N/A'}",
+        f"IncidentBeginDate: {declaration.incidentBeginDate or 'N/A'}",
+        f"IncidentEndDate: {declaration.incidentEndDate or 'N/A'}"
     ]
     if score is not None:
         parts.append(f"FAISS Score: {round(score, 3)}")
@@ -259,8 +261,8 @@ def main():
     # 🚀 Chat Interface with history
     gr.ChatInterface(
         fn=chat_rag_fn,
-        title="🌀 FEMA Disaster AI Assistant",
-        description="Ask about disasters by state/county or general questions. Data powered by FEMA + FAISS + OpenAI."
+        title="🌀 Disaster AI Assistant",
+        description="Ask about FEMA disasters by state/county or general questions. Data powered by FEMA + FAISS + OpenAI."
     ).launch()
 
 if __name__ == "__main__":
